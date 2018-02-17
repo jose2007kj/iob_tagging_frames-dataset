@@ -4,9 +4,9 @@ import json
 # from nltk.tokenize import wordpunct_tokenize
 import re
 with open('train1_template.txt', 'w') as f:
-	with open('file_0.json', 'r') as file_object:
+	with open('frames/frames.json', 'r') as file_object:
 		contents = json.load(file_object)
-		for i in range(0,12):
+		for i in range(0,1300):
 			print(i, '****************************')
 			for item in contents[i]['turns']:
 				if 'user' in item['author']:
@@ -98,7 +98,23 @@ with open('train1_template.txt', 'w') as f:
 								# 	iob[x] = iob[x].replace("O", "nmnmnm")
 								# 	print("iob",iob[x])
 							elif wc > 1:
-								print("more than 1 word")
+								print("more than 1 word",wc)
+								for idx,word in enumerate(n_val.split()):
+									for idy,word2 in enumerate(final.split()):
+
+										if word in word2:
+											pos = idy
+											# print("position brek",pos)
+											if idx == 0:
+												tag = "B_"+val['key']
+												iob[pos] = iob[pos].replace("O", tag)
+												break
+											else:
+												tag = "I_"+val['key']
+												iob[pos] = iob[pos].replace("O", tag)
+												break
+
+
 							else:
 								print("0 words")
 					f.write(intent)
