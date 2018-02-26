@@ -4,7 +4,7 @@ import json
 # from nltk.tokenize import wordpunct_tokenize
 import re
 with open('train1_template.txt', 'w') as f:
-	with open('frames/frames.json', 'r') as file_object:
+	with open('frames.json', 'r') as file_object:
 		contents = json.load(file_object)
 		for i in range(0,1300):
 			print(i, '****************************')
