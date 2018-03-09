@@ -6,11 +6,11 @@ import json
 # nltk.download('punkt')
 # from nltk.tokenize import wordpunct_tokenize
 import re
-import numpy as np
-import pandas as pd
-from pandas import DataFrame, read_csv
-with open('corrected.iob', 'w') as f:
-	with open('frames/frames.json', 'r') as file_object:
+# import numpy as np
+# import pandas as pd
+# from pandas import DataFrame, read_csv
+with open('corrected23.iob', 'w') as f:
+	with open('frames.json', 'r') as file_object:
 		contents = json.load(file_object)
 		crf = []
 		kj = []
@@ -20,8 +20,8 @@ with open('corrected.iob', 'w') as f:
 		onto_key = 0
 		boolean = []
 		text = []
-		df=pd.DataFrame(columns=['nl', 'act1', 'act2', 'act3', 'act4', 'slot1', 'slot2', 'slot3', 'slot4'])
-		for i in range(0,1350):
+		# df=pd.DataFrame(columns=['nl', 'act1', 'act2', 'act3', 'act4', 'slot1', 'slot2', 'slot3', 'slot4'])
+		for i in range(1100,1350):
 			print(i, '****************************')
 			for item in contents[i]['turns']:
 				if 'user' in item['author']:
@@ -62,7 +62,7 @@ with open('corrected.iob', 'w') as f:
 							z=z+1
 						else:
 							if args['name'] not in intent:	
-								intent += "+"+args['name']
+								intent += " "+args['name']
 								z=z+1
 						temp = 0
 						print("**********************************",len(args['args']))
@@ -76,7 +76,14 @@ with open('corrected.iob', 'w') as f:
 								if 'book' not in val['val']:
 									# print("val,key",val['val'],val['key'])
 									n_val = re.sub(r",\s+", " ", val['val'])
-									n_val = n_val.replace('$', '')
+									# n_val = n_val.replace('$', '')
+									n_val = re.sub(r"\.+", " ", n_val)
+									n_val = re.sub(r"\?+", " ", n_val)# remove ?
+									n_val = re.sub(r"\!+", " ", n_val)#remove !
+									n_val =n_val.rstrip()
+									pattern = re.compile(r'\s+')
+									n_val = re.sub(pattern," ", n_val)
+									n_val= n_val.replace('$',"") #for removing $
 									print("+++++++++++++++++++++",n_val,final)
 									# n_val = val['val']
 									n_val = n_val.lower()
@@ -284,6 +291,7 @@ with open('corrected.iob', 'w') as f:
 								# 	print("iob",iob[x])
 							elif wc > 1:
 								print("more than 1 word",wc)
+								# print("testing---------------------------",n_val)
 								for idx,word in enumerate(n_val.split()):
 									for idy,word2 in enumerate(final.split()):
 
@@ -295,8 +303,11 @@ with open('corrected.iob', 'w') as f:
 											if idx == 0:
 												tag = "B_"+args['name']+"_"+val['key']
 												if iob[pos] == " O" or iob[pos] == "O":
+													print("testing---------------------------",n_val)
+													print("testing%skj"%iob[pos])
 													print("==0")
 													iob[pos] = iob[pos].replace("O", tag)
+													print("testing---------------------------",n_val,iob[pos])
 												else:
 													continue
 												# break
@@ -331,14 +342,17 @@ with open('corrected.iob', 'w') as f:
 					# f.write(''.join(slots))
 					# f.write('\n')
 					final="BOS "+final+" EOS"
-					f.write(final +"\t") 
+					f.write(final)
+					f.write("\t") 
 					# f.write(''.join(iob))
 
 					# f.write(" "+intent+"\n")
 					iob = ["O "]+ iob
 					iob.append(" O")
 					f.write(''.join(iob))
-					f.write(" "+intent+"\n")
+					f.write("\t")
+					f.write(intent)
+					f.write("\n")
 					# f.write('\n')
 					iob_count = 0	
 					for word in iob:
@@ -358,7 +372,7 @@ with open('corrected.iob', 'w') as f:
 					print("- - - - - - - - - - - - - - - - - - - - -- - - - - -")
 					print(final,act,slots)
 					if 'xxx' not in act[0]:
-						df.loc[num] = pd.Series(dict(nl=final, act1=act[0], act2=act[1], act3=act[2], act4=act[3], slot1= slots[0], slot2= slots[1], slot3= slots[2], slot4= slots[3]))
+						# df.loc[num] = pd.Series(dict(nl=final, act1=act[0], act2=act[1], act3=act[2], act4=act[3], slot1= slots[0], slot2= slots[1], slot3= slots[2], slot4= slots[3]))
 						num=num+1
 					# jk = [[final,act[0],act[1],act[2],act[3],slots[0],slots[1],slots[2],slots[3]]]
 					# kj.append(final,act[0],act[1],act[2],act[3],slots[0],slots[1],slots[2],slots[3])
@@ -375,7 +389,7 @@ with open('corrected.iob', 'w') as f:
 					# 		for intent in act['info']['intent']:
 					# 			print(intent['val'])
 					# print(df)
-		df.to_csv('iob crf_new2.csv', index=False)     
+		# df.to_csv('iob crf_new2.csv', index=False)     
 		print("boolean",boolean ,text)
 		# with open('unused_acts', 'w') as outfile: #by jose
 		# 	json.dump(set(no_slots),outfile)
