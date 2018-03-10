@@ -9,7 +9,7 @@ import re
 # import numpy as np
 # import pandas as pd
 # from pandas import DataFrame, read_csv
-with open('only_iobkj.iob', 'w') as f:
+with open('only_iob_kj.iob', 'w') as f:
 	with open('frames.json', 'r') as file_object:
 		contents = json.load(file_object)
 		crf = []
@@ -21,7 +21,7 @@ with open('only_iobkj.iob', 'w') as f:
 		boolean = []
 		text = []
 		# df=pd.DataFrame(columns=['nl', 'act1', 'act2', 'act3', 'act4', 'slot1', 'slot2', 'slot3', 'slot4'])
-		for i in range(1100,1350):
+		for i in range(0,1200):
 			print(i, '****************************')
 			for item in contents[i]['turns']:
 				if 'user' in item['author']:
@@ -364,24 +364,73 @@ with open('only_iobkj.iob', 'w') as f:
 						# 	print("8888888888888888888888",word)
 					print("**************************",iob,len(iob),iob_count)
 					ll = 0
-					greeting = ['hi','hello','heyo','good morning','hey','greetings']
+					greeting = ['hi','hello','heyo','hey','greetings']
 					moreinfo = ['more','details']
 					affirm = ['ok','ya','yeah','please do','yes']
+					# thankyou= = ['thank]
 					if len(iob) == iob_count:
 						print("^^^^^^^^#########################################################^^^^^^^^^^",iob,intent)
 						intentlist = intent.split()
 						# intentlist= [i for i in words if i.lower() not in stopwords]
 						for i, w in enumerate(intentlist):
-							if w == 'confirm'
+							if w == 'confirm':
 								intentlist[i] ='affirm'
+								print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
 
 						ioblen = len(iob)
-						for k in range(0,len(intentlist)): #working code for inserting intenbt
-							if k ==0:
-								iob[k+1]=intentlist[k]
+						# for k in range(0,len(intentlist)): #working code for inserting intenbt
+							# if k ==0:
+							# 	iob[k+1]=intentlist[k]
+							# else:
+							# 	iob[k+1]= " "+intentlist[k]  #end here
+						for l,m in enumerate(final.split()):
+							if l == 1:
+								if m == 'good':
+									if final[l+1] == 'afternoon' or final[l+1] == 'evening' or final[l+1] == 'morning':
+										# if k == 0:
+										iob[l]="B_greeting"
+										iob[l+1]=" I_greeting"
+								elif m in greeting:
+									iob[l] = "B_greeting"
+								elif m in moreinfo:
+									iob[l] = 'B_moreinfo'
+								elif m in affirm:
+									iob[l] = 'B_affirm'
+								elif "thank" in m:
+									iob[l] = "B_thankyou"
+								elif 'bye' in m:
+									iob[l] = 'B_goodbye'
+								elif 'no' == m or 'nope' == m:
+									iob[l] = 'B_negate'
+								else:
+									print("b")
 							else:
-								iob[k+1]= " "+intentlist[k]  #end here
-							if intentlist[k] == 'greeting':
+								if m == 'good':
+									if final[l+1] == 'afternoon' or final[l+1] == 'evening' or final[l+1] == 'morning':
+										# if k == 0:
+										iob[l]=" B_greeting"
+										iob[l+1]=" I_greeting"
+								elif m in greeting:
+									iob[l] = " B_greeting"
+								elif m in moreinfo:
+									iob[l] = ' B_moreinfo'
+								elif m in affirm:
+									iob[l] = ' B_affirm'
+								elif "thank" in m:
+									iob[l] = " B_thankyou"
+								elif 'bye' in m:
+									iob[l] = ' B_goodbye'
+								elif 'no' == m or 'nope' == m:
+									iob[l] = ' B_negate'
+								else:
+									print("b")
+
+
+
+								# if m in greeting:
+
+							
+							# if intentlist[k] == 'greeting':
 
 
 						
