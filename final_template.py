@@ -4,7 +4,7 @@ with open('templates.json', 'r') as file_object:
 		contents = json.load(file_object)
 dictn = {}
 # temp = 0
-with open('final_template.txt', 'w') as f,open('dia_acts.txt','w') as g:
+with open('start_final_template.txt', 'w') as f,open('start_dia_acts.txt','w') as g:
 	for key, value in contents.items():
 		# print type(contents)
 	    #print key #gets intent

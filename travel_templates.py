@@ -28,6 +28,7 @@ with open('trash.iob', 'w') as f:
 		# df=pd.DataFrame(columns=['nl', 'act1', 'act2', 'act3', 'act4', 'slot1', 'slot2', 'slot3', 'slot4'])
 		for i in range(0,1350):
 			print(i, '****************************')
+			starter=0
 			for item in contents[i]['turns']:
 				if 'user' in item['author']:
 					if travel_key not in travel_dict:
@@ -723,7 +724,12 @@ with open('trash.iob', 'w') as f:
 						else:
 							temp_key=temp_key+'+'+temp_w
 					# temp_key=sorted_temp_key.replace(" ", "+")
-					templates[temp_key].append(temp_nl)	
+					if starter==0:
+						templates['start+'+temp_key].append(temp_nl)
+						starter=1
+					else:
+						templates[temp_key].append(temp_nl)
+
 					f.write(''.join(iob))
 					f.write("\n")
 					# f.write(intent)
